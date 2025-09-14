@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Attendance - Attendance_Marking_System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #4a90e2, #87ceeb); min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .container { background: #fff; padding: 40px; border-radius: 15px; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); width: 100%; max-width: 800px; }
+        h1 { color: #1a3c5e; font-size: 2em; margin-bottom: 25px; display: flex; align-items: center; }
+        h1 i { margin-right: 10px; color: #2ecc71; }
+        form { margin-bottom: 20px; }
+        label { color: #1a3c5e; font-weight: 600; margin-right: 10px; }
+        input[type="date"] { padding: 10px; border: 2px solid #b3cde0; border-radius: 8px; font-size: 1em; transition: border-color 0.3s; }
+        input[type="date"]:focus { border-color: #2ecc71; outline: none; }
+        input[type="submit"] { padding: 10px 20px; background: #2ecc71; color: #fff; border: none; border-radius: 8px; cursor: pointer; margin-left: 10px; transition: background 0.3s, transform 0.3s; }
+        input[type="submit"]:hover { background: #27ae60; transform: translateY(-3px); }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; border: 1px solid #b3cde0; text-align: center; }
+        th { background: #2ecc71; color: #fff; width: 33%; }
+        td { width: 33%; color: #34495e; }
+        tr:nth-child(even) { background: #f0f8f5; }
+        tr:hover { background: #d4efdf; }
+        .drive-link { color: #3498db; text-decoration: none; font-size: 1em; }
+        .drive-link:hover { text-decoration: underline; color: #2980b9; }
+        .error { color: #e74c3c; font-size: 1em; margin-bottom: 15px; font-weight: bold; }
+        .back-link { display: block; margin-top: 20px; color: #3498db; text-decoration: none; font-size: 1em; }
+        .back-link:hover { text-decoration: underline; color: #2980b9; }
+        @media (max-width: 600px) { table, th, td { font-size: 0.9em; padding: 8px; } }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-calendar-alt"></i> Attendance for {{ date }}</h1>
+        <form method="POST">
+            <label for="date">Select Date:</label>
+            <input type="date" name="date" id="date" value="{{ date }}" required>
+            <input type="submit" value="Load">
+        </form>
+        <table>
+            <tr><th>Name</th><th>Roll No</th><th>Time</th></tr>
+            {% if records %}
+                {% for record in records %}
+                    <tr><td>{{ record[0] }}</td><td>{{ record[1] }}</td><td>{{ record[2] }}</td></tr>
+                {% endfor %}
+            {% else %}
+                <tr><td colspan="3">No records found</td></tr>
+            {% endif %}
+        </table>
+        {% if drive_link %}
+            {% if "error" in drive_link|lower %}
+                <div class="error">{{ drive_link }}</div>
+            {% else %}
+                <p>Download CSV: <a href="{{ drive_link }}" target="_blank" class="drive-link">Dropbox Link</a></p>
+            {% endif %}
+        {% endif %}
+        <a href="{{ url_for('index') }}" class="back-link">Back to Home</a>
+    </div>
+</body>
+</html>

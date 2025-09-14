@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Face - Attendance Marking System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #4a90e2, #87ceeb); min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .container { background: #fff; padding: 40px; border-radius: 15px; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); width: 100%; max-width: 500px; }
+        h1 { color: #1a3c5e; font-size: 2em; margin-bottom: 25px; display: flex; align-items: center; }
+        h1 i { margin-right: 10px; color: #3498db; }
+        form { display: flex; flex-direction: column; }
+        label { color: #1a3c5e; font-weight: 600; margin-bottom: 5px; text-align: left; }
+        input[type="text"] { padding: 12px; margin-bottom: 15px; border: 2px solid #b3cde0; border-radius: 8px; font-size: 1em; transition: border-color 0.3s, box-shadow 0.3s; }
+        input[type="text"]:focus { border-color: #3498db; box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); outline: none; }
+        input[type="submit"] { padding: 12px; background: #3498db; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 1.1em; transition: background 0.3s, transform 0.3s; }
+        input[type="submit"]:hover { background: #2980b9; transform: translateY(-3px); }
+        .back-link { display: block; margin-top: 20px; color: #3498db; text-decoration: none; font-size: 1em; }
+        .back-link:hover { text-decoration: underline; color: #2980b9; }
+        .error { color: #e74c3c; font-size: 0.9em; margin-top: -10px; margin-bottom: 15px; display: none; }
+        .error-message { color: #e74c3c; font-size: 1.2em; font-weight: bold; margin-bottom: 15px; text-align: center; }
+        .message { color: #2ecc71; font-size: 1.2em; font-weight: bold; margin-bottom: 15px; text-align: center; }
+        .note { color: #34495e; font-size: 0.9em; margin-bottom: 15px; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-camera"></i> Add New Face</h1>
+        <p class="note">Ensure the student is in the allowed list before adding their face.</p>
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+        {% if message %}
+            <div class="message">{{ message }}</div>
+        {% endif %}
+        <form method="POST" id="addFaceForm">
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name" required>
+            <div class="error" id="nameError">Please enter a name.</div>
+            <label for="roll_no">Roll No:</label>
+            <input type="text" name="roll_no" id="roll_no" required>
+            <div class="error" id="rollNoError">Please enter a roll number.</div>
+            <input type="submit" value="Start Capture">
+        </form>
+        <a href="{{ url_for('index') }}" class="back-link">Back to Home</a>
+    </div>
+    <script>
+        const form = document.getElementById('addFaceForm');
+        form.addEventListener('submit', (e) => {
+            const nameInput = document.getElementById('name');
+            const rollNoInput = document.getElementById('roll_no');
+            const nameError = document.getElementById('nameError');
+            const rollNoError = document.getElementById('rollNoError');
+            
+            nameError.style.display = 'none';
+            rollNoError.style.display = 'none';
+    
+            if (!nameInput.value.trim()) {
+                nameError.textContent = "Please enter a name.";
+                nameError.style.display = 'block';
+                e.preventDefault();
+            }
+            if (!rollNoInput.value.trim()) {
+                rollNoError.textContent = "Please enter a roll number.";
+                rollNoError.style.display = 'block';
+                e.preventDefault();
+            }
+            // Add confirmation dialog
+            if (nameInput.value.trim() && rollNoInput.value.trim()) {
+                if (!confirm(`Are you sure you want to start face capture for ${nameInput.value} (Roll No: ${rollNoInput.value})?`)) {
+                    e.preventDefault(); // Prevent form submission if user cancels
+                }
+            }
+        });
+    </script>
+</body>
+</html>
